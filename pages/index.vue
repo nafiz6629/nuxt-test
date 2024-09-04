@@ -1,27 +1,29 @@
 <template>
     <div>
         <h1>Home Page</h1>
-        <!-- <NuxtImg provider="myProvider" src="/no_profile.jpg" class="fit" fit="cover" sizes="410px" width="410"
-            height="410" :placeholder="[50, 50, 50, 1]" loading="lazy" alt="Product" /> -->
-        <img :src="imageUrl" alt="">
-        <!-- <img :src="'https://mislayer.com/public/img/' + 'no_profile.jpg'" alt=""> -->
+        <a href="/about">About</a>
     </div>
 </template>
 
-<script setup lang="ts">
-const imageUrl = ref("");
-
-onMounted(async () => {
-    try {
-        const response = await fetch('/api/test');
-        const blob = await response.blob();
-        imageUrl.value = URL.createObjectURL(blob);
-    } catch (error) {
-        console.error('Error fetching image:', error);
+<script setup>
+const url = "angelica-divan-bfl-dv-116-74"
+const { data, status, error, refresh, clear } = await useAsyncData(() => $fetch('https://mislayer.com/public/api/ecom/product-detail', {
+    method: "POST",
+    body: {
+        company_code: "d05049134c17ed5289ff4e810c2618e4",
+        fg_url: url,
     }
-});
+}))
 
-onUnmounted(() => {
-    URL.revokeObjectURL(imageUrl.value);
-});
+watchEffect(() => {
+    if (data.value) {
+        const metaTitle = computed(() => data.value.data.acc_ledger_name) // Access reactively
+        useHead({
+            title: metaTitle.value, // Use computed value directly
+            meta: [
+                { name: 'description', content: metaTitle.value }
+            ],
+        })
+    }
+})
 </script>
