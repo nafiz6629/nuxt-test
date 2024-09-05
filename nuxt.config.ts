@@ -13,13 +13,12 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ["@nuxt/image"],
-  image: {
-    providers: {
-      imageProxy: {
-        name: 'imageProxy',
-        provider: '~/providers/imageProxy',
-      },
-    },
+  modules: ["@nuxt/image", '@nuxtjs/sitemap'],
+  sitemap: {
+    sources: [
+      '/api/sitemap',
+    ],
+    exclude: ['/about/**'],
+    include: ['/blog/**'],
   },
 })
